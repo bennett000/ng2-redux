@@ -1,16 +1,17 @@
-// Polyfills
+// es6/reflect
 import 'es6-shim';
-import 'core-js';
 import 'reflect-metadata';
-import 'zone.js/dist/zone';
 
-// Angular 2
+// redux
+import 'redux';
+import 'redux-thunk';
+
+// angular 2
+import 'angular2/bundles/angular2-polyfills';
 import 'angular2/bootstrap';
 import 'angular2/platform/browser';
 import 'angular2/platform/common_dom';
 import 'angular2/core';
-import 'angular2/router';
-import 'angular2/http';
 
-// RxJS
-import 'rxjs';
+// Angular 2 Redux Bindings
+import 'ng2-redux';

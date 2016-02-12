@@ -9,13 +9,13 @@ export interface ICounterDispatch extends Redux.Map<Redux.ActionCreator>{
 }
 
 export var increment = () => {
-  return <Redux.Action>{
+  return {
     type: INCREMENT_COUNTER
   };
 }
 
 export var decrement = () => {
-  return <Redux.Action>{
+  return {
     type: DECREMENT_COUNTER
   };
 }

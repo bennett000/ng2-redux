@@ -13,6 +13,6 @@ const finalCreateStore = <Redux.CreateStore<RootState>>compose(
   devTools()
 )(createStore);
 
-export default () => {
+export const create = () => {
   return finalCreateStore(reducer);
 }

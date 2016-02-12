@@ -1,2 +1,3 @@
 import 'reflect-metadata';
-export {provider} from './components/provider';
+export {provider, INgRedux} from './components/provider';
+export {Connector} from './decorators/connector';

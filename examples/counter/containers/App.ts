@@ -1,7 +1,10 @@
 import {Component, Inject, OnDestroy} from 'angular2/core';
-import {bindActionCreators} from 'redux';
+import * as Redux from 'redux';
+const {bindActionCreators} = Redux;
 import {Counter} from '../components/Counter';
 import * as CounterActions from '../actions/CounterActions';
+import {RootState} from '../store/configureStore';
+import {Connector} from 'ng2-redux';
 
 @Component({
   selector: 'root',
@@ -15,27 +18,26 @@ import * as CounterActions from '../actions/CounterActions';
   </counter>
   `
 })
+//@Connector({
+//  mapState: (state) => {
+//    return {
+//      counter: state.counter
+//    };
+//  },
+//  mapDispatch: (dispatch) => {
+//    return bindActionCreators<any,
+//      CounterActions.ICounterDispatch>(CounterActions, dispatch);
+//  }
+//})
 export default class App implements OnDestroy {
 
   protected unsubscribe: Function;
 
-  constructor( @Inject('ngRedux') ngRedux, @Inject('devTools') devTools) {
-    devTools.start(ngRedux);
-    this.unsubscribe = ngRedux.connect(this.mapStateToThis, this.mapDispatchToThis)(this);
+  constructor () {
+  //constructor( @Inject('ngRedux') ngRedux, @Inject('devTools') devTools) {
+    //devTools.start(ngRedux);
   }
-
   ngOnDestroy() {
-    this.unsubscribe();
-  }
-
-  mapStateToThis(state) {
-    return {
-      counter: state.counter
-    };
-  }
-
-  mapDispatchToThis(dispatch) {
-    return bindActionCreators<any,
-      CounterActions.ICounterDispatch>(CounterActions, dispatch);
+    console.log('App: on destroy');
   }
 }
