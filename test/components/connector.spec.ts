@@ -1,8 +1,8 @@
 import expect from 'expect';
-let sinon = require('sinon');
+import * as sinon from 'sinon';
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 describe('Connector', () => {
   let store;
@@ -16,7 +16,7 @@ describe('Connector', () => {
       baz: -1
     };
     store = createStore((state = defaultState, action) => {
-      return {...state, baz: action.payload};
+      return Object.assign(state, { baz: action.payload });
     });
     targetObj = {};
     connector = new Connector(store);

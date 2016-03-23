@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf ./lib; tsc",
     "postinstall": "typings install",
-    "test": "mocha --compilers js:babel/register --recursive --require ts-node/register",
+    "test": "ts-node ./node_modules/mocha/bin/_mocha  --opts ./test/mocha.opts",
     "typings": "typings install"
   },
   "typings": "lib/index.d.ts",

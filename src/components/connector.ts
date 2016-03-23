@@ -17,7 +17,8 @@ export default class Connector<RootState> {
 
   connect = (mapStateToTarget, mapDispatchToTarget) => {
 
-    const finalMapStateToTarget = mapStateToTarget || this._defaultMapStateToTarget;
+    const finalMapStateToTarget =
+      mapStateToTarget || this._defaultMapStateToTarget;
 
     const finalMapDispatchToTarget = _.isPlainObject(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
@@ -25,39 +26,43 @@ export default class Connector<RootState> {
 
     invariant(
       _.isFunction(finalMapStateToTarget),
-      'mapStateToTarget must be a Function. Instead received $s.', finalMapStateToTarget
-      );
+      ERROR_MUST_BE_FUNCTION,
+      finalMapStateToTarget
+    );
 
     invariant(
-      _.isPlainObject(finalMapDispatchToTarget) || _.isFunction(finalMapDispatchToTarget),
-      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', finalMapDispatchToTarget
+      _.isPlainObject(finalMapDispatchToTarget) || 
+        _.isFunction(finalMapDispatchToTarget),
+      ERROR_MUST_BE_PLAIN_OBJECT, finalMapDispatchToTarget
       );
 
-    let slice = this.getStateSlice(this._store.getState(), finalMapStateToTarget);
+    let slice =
+      this.getStateSlice(this._store.getState(), finalMapStateToTarget);
 
     const boundActionCreators = finalMapDispatchToTarget(this._store.dispatch);
 
     return (target) => {
 
       invariant(
-        _.isFunction(target) || _.isObject(target),
-        'The target parameter passed to connect must be a Function or a plain object.'
-        );
+        _.isFunction(target) || _.isObject(target), 
+        ERROR_FUNCTION_OR_OBJECT
+      );
 
-      //Initial update
+      // Initial update
       this.updateTarget(target, slice, boundActionCreators);
 
       const unsubscribe = this._store.subscribe(() => {
-        const nextSlice = this.getStateSlice(this._store.getState(), finalMapStateToTarget);
+        const nextSlice =
+          this.getStateSlice(this._store.getState(), finalMapStateToTarget);
         if (!shallowEqual(slice, nextSlice)) {
           slice = nextSlice;
           this.updateTarget(target, slice, boundActionCreators);
         }
       });
       return unsubscribe;
-    }
+    };
 
-  }
+  };
 
 
   updateTarget(target, StateSlice, dispatch) {
@@ -73,7 +78,7 @@ export default class Connector<RootState> {
 
     invariant(
       _.isPlainObject(slice),
-      '`mapStateToScope` must return an object. Instead received %s.',
+      ERROR_MUST_RETURN_OBJECT,
       slice
       );
 
@@ -81,3 +86,17 @@ export default class Connector<RootState> {
   }
 
 }
+
+const ERROR_MUST_BE_FUNCTION = 
+  'mapStateToTarget must be a Function. Instead received $s.';
+
+const ERROR_MUST_BE_PLAIN_OBJECT =
+  'mapDispatchToTarget must be a plain Object or a Function.' +
+  'Instead received $s.';
+
+const ERROR_FUNCTION_OR_OBJECT =
+  'The target parameter passed to connect must be a Function ' + 
+  'or a plain object.';
+
+const ERROR_MUST_RETURN_OBJECT = 
+  '`mapStateToScope` must return an object. Instead received %s.';

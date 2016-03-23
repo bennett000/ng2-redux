@@ -1,5 +1,6 @@
 import Connector from './connector';
 import {provide, Injector, Provider} from 'angular2/core';
+import ObservableStore from './observable-store';
 import * as Redux from 'redux';
 
 interface IConnect {
@@ -7,27 +8,30 @@ interface IConnect {
 }
 
 interface INgRedux<T> extends Redux.Store<T> {
-  connect: IConnect
+  connect: IConnect;
 }
 
 export function provider<T>(store: Redux.Store<T>) {
   const _connector = new Connector(store);
+  const _observableStore = new ObservableStore(store);
   const factory = (): INgRedux<T> => {
     return <INgRedux<T>>{
       connect: _connector.connect,
-      dispatch: store.dispatch,
+      dispatch: _observableStore.dispatch,
+      select: _observableStore.select,
       subscribe: store.subscribe,
       getState: store.getState,
       replaceReducer: store.replaceReducer
-    }
+    };
   };
 
-  return provide('ngRedux', {useFactory: factory });
+  return provide('ngRedux', { useFactory: factory });
 }
 
 
 /*
- const createStoreWithMiddleware = applyInjectableMiddleware(thunk, 'promise')(createStore);
+ const createStoreWithMiddleware 
+  = applyInjectableMiddleware(thunk, 'promise')(createStore);
 */
 /*
 export function applyInjectableMiddleware(middlewares) {

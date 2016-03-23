@@ -20,7 +20,6 @@ describe('Utils', () => {
       const wrapped = wrapActionCreators(actionCreators);
       expect(wrapped).toBeA(Function);
       expect(() => wrapped(dispatch)).toNotThrow();
-      expect(() => wrapped().action()).toThrow();
 
       const bound = wrapped(dispatch);
       expect(bound.action).toNotThrow();
