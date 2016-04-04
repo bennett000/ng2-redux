@@ -1,5 +1,17 @@
-import expect from 'expect';
+import {expect} from 'chai';
 import wrapActionCreators from '../../src/utils/wrapActionCreators';
+
+interface TestDispatchMap extends Redux.Map<TestPartialDispatch> {
+  action: TestPartialDispatch;
+}
+
+interface TestAction extends Redux.Action {
+  dispatched: Redux.Action;
+}
+
+interface TestPartialDispatch extends Redux.PartialDispatch {
+  (): TestAction; 
+}
 
 describe('Utils', () => {
   describe('wrapActionCreators', () => {
@@ -11,19 +23,20 @@ describe('Utils', () => {
         };
       }
 
-      const actionResult = {an: 'action'};
+      const actionResult = { type: 'test-action' };
 
       const actionCreators = {
         action: () => actionResult
       };
 
-      const wrapped = wrapActionCreators(actionCreators);
-      expect(wrapped).toBeA(Function);
-      expect(() => wrapped(dispatch)).toNotThrow();
+      const wrapped = wrapActionCreators<
+        Redux.Map<Redux.ActionCreator>, TestDispatchMap>(actionCreators);
+      expect(typeof wrapped).to.equal('function');
+      expect(() => wrapped(dispatch)).not.to.throw(Error);
 
       const bound = wrapped(dispatch);
-      expect(bound.action).toNotThrow();
-      expect(bound.action().dispatched).toBe(actionResult);
+      expect(bound.action).not.to.throw(Error);
+      expect(bound.action().dispatched).to.equal(actionResult);
 
     });
   });
